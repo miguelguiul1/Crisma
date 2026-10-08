@@ -699,6 +699,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
   .contact-row > a { padding: 22px 0; }
   .contact-row strong { font-size: 1.22rem; overflow-wrap: anywhere; word-break: normal; }
+  .contact-row a[href^="mailto"] strong { font-size: 1.02rem; overflow-wrap: normal; }
   .contact__map { min-height: 300px; }
 
   .footer__inner { grid-template-columns: 1fr; gap: 28px; }
