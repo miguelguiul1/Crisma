@@ -1,11 +1,34 @@
-FOTOS DO SITE – NAUTICARRETAS
+FOTOS E LOGO DO SITE – NAUTICARRETAS
 
-Coloque aqui as fotos REAIS da empresa (JPG), com estes nomes:
+Coloque aqui as fotos REAIS da empresa (JPG) e a logo oficial, com estes nomes.
+Enquanto um arquivo não existir, o site usa automaticamente uma alternativa
+na cor da marca — nada quebra. Basta salvar o arquivo e recarregar a página.
 
-sobre.jpg       -> Oficina / equipe (seção "Sobre", formato vertical)
+LOGO
+logo.png                -> Logo oficial (fundo transparente, versão clara/dourada,
+                           ~360x88px). Substitui o símbolo provisório no topo e no rodapé.
+
+HERO (topo do site)
+hero.jpg                -> Foto principal, horizontal, ≥ 2000px de largura.
+                           Ex.: carreta com lancha/jet ski ao ar livre. Ela recebe
+                           automaticamente um degradê navy para o texto ficar legível.
+
+SOBRE
+sobre.jpg               -> Oficina / equipe (vertical, 4:5)
+galeria-03.jpg          -> (também usada como detalhe na seção "Sobre")
+
+SERVIÇOS (pré-visualização que segue o mouse no computador)
+servico-fabricacao.jpg  servico-jetski.jpg   servico-lancha.jpg
+servico-veleiro.jpg     servico-reforma.jpg  servico-manutencao.jpg
+
+TIPOS DE EMBARCAÇÃO (imagem que troca com animação ao clicar nas abas)
+tipo-jetski.jpg   tipo-lancha.jpg   tipo-veleiro.jpg   tipo-especial.jpg
+(formato 5:4, ≥ 1400px)
+
+GALERIA
 galeria-01.jpg  -> Carretas prontas
 galeria-02.jpg  -> Carretas em fabricação
-galeria-03.jpg  -> Detalhes da estrutura (formato vertical)
+galeria-03.jpg  -> Detalhes da estrutura (vertical)
 galeria-04.jpg  -> Jet skis nas carretas
 galeria-05.jpg  -> Lanchas
 galeria-06.jpg  -> Sistema de rodagem
@@ -14,5 +37,5 @@ galeria-08.jpg  -> Catracas
 galeria-09.jpg  -> Acabamentos
 galeria-10.jpg  -> Oficina / fábrica
 
-Enquanto uma foto não existir, o site mostra automaticamente um espaço
-reservado na cor da marca. Recomenda-se fotos com ~1600px de largura.
+Dica de performance: exporte as fotos em JPG qualidade ~80, com no máximo
+2000px no lado maior (hero) e 1600px (demais). Isso mantém o site rápido.
