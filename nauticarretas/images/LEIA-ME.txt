@@ -26,7 +26,8 @@ tipo-jetski.jpg   tipo-lancha.jpg   tipo-veleiro.jpg   tipo-especial.jpg
 (formato 5:4, ≥ 1400px)
 
 GALERIA
-galeria-01.jpg  -> Carretas prontas
+carreta-pronta-01.jpg / carreta-pronta-02.jpg -> Carretas prontas (JÁ ADICIONADAS)
+galeria-01.jpg  -> (não usado no momento)
 galeria-02.jpg  -> Carretas em fabricação
 galeria-03.jpg  -> Detalhes da estrutura (vertical)
 galeria-04.jpg  -> Jet skis nas carretas
