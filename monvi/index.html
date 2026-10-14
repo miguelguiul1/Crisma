@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monvi</title>
+<meta name="description" content="Monvi: roupas fitness que não ficam transparentes e são super confortáveis. Leggings, tops, shorts e macaquinhos com tecido de 280 g/m².">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap">
+<style>
+/* Layout: letreiro atlético largo, hero assimétrico com o teste de opacidade ao vivo, vitrine calma sobre um neutro levemente lilás */
+:root {
+  --bg: #F3F1F4;
+  --surface: #FFFFFF;
+  --sunk: #E7E3EA;
+  --ink: #211B25;
+  --muted: #655C6B;
+  --line: #D8D2DC;
+  --accent: #A82D5A;
+  --accent-ink: #FFFFFF;
+  --ok: #2B6A55;
+  --mid: #9A6412;
+  --bad: #B3263E;
+  /* objetos físicos: mesmas cores nos dois temas */
+  --garment: #1F1C22;
+  --under: #F6B9CB;
+  --under-dot: #D9668E;
+  --under-ink: #5A1730;
+
+  --font-display: "Unbounded", "Arial Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --max: 1200px;
+  --radius: 14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141016; --surface: #1D1821; --sunk: #28222D; --ink: #F2EDF4; --muted: #ABA1B2; --line: #362F3B;
+    --accent: #E2709B; --accent-ink: #1B0D14; --ok: #6CC3A3; --mid: #E2B05A; --bad: #F07A8E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141016; --surface: #1D1821; --sunk: #28222D; --ink: #F2EDF4; --muted: #ABA1B2; --line: #362F3B;
+  --accent: #E2709B; --accent-ink: #1B0D14; --ok: #6CC3A3; --mid: #E2B05A; --bad: #F07A8E;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.wrap { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.eyebrow {
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+}
+.section { padding-block: clamp(56px, 8vw, 104px); }
+.section-head { display: grid; gap: 12px; max-width: 46rem; margin-bottom: clamp(28px, 4vw, 44px); }
+.section-head h2 { font-size: clamp(1.7rem, 3.6vw, 2.6rem); font-weight: 700; }
+.section-head p { color: var(--muted); font-size: 1.06rem; max-width: 38rem; }
+
+/* Botões */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1.5px solid var(--ink);
+  background: var(--ink); color: var(--bg); font-weight: 600; text-decoration: none; cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease, color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.block { width: 100%; }
+
+/* Faixa de aviso */
+.announce {
+  background: var(--ink); color: var(--bg); text-align: center; font-size: .85rem;
+  padding: 8px var(--gutter);
+}
+.announce strong { font-weight: 600; }
+
+/* Cabeçalho */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-row { display: flex; align-items: center; gap: 20px; min-height: 68px; }
+.logo { font-family: var(--font-display); font-weight: 800; font-size: 1.45rem; letter-spacing: .02em; text-decoration: none; }
+.logo span { color: var(--accent); }
+.nav { display: flex; gap: 26px; margin-left: auto; }
+.nav a { text-decoration: none; font-weight: 500; color: var(--muted); }
+.nav a:hover { color: var(--ink); }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.icon-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; min-width: 44px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600;
+}
+.icon-btn svg { width: 20px; height: 20px; }
+.cart-count {
+  font-family: var(--font-mono); font-size: .8rem; min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+  display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums;
+}
+.menu-btn { display: none; }
+@media (max-width: 760px) {
+  .nav {
+    display: none; position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; gap: 0; background: var(--surface); border-bottom: 1px solid var(--line);
+    padding: 8px var(--gutter) 16px;
+  }
+  .nav.open { display: flex; }
+  .nav a { padding: 12px 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+  .menu-btn { display: inline-flex; }
+  .header-actions { margin-left: auto; }
+  .cart-label { display: none; }
+}
+
+/* Hero */
+.hero { padding-block: clamp(36px, 6vw, 80px) clamp(48px, 7vw, 88px); }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero-copy { display: grid; gap: 24px; min-width: 0; }
+.hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.6rem); font-weight: 800; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: var(--accent); display: block; }
+.hero-lead { font-size: clamp(1.06rem, 1.6vw, 1.22rem); color: var(--muted); max-width: 33rem; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-facts { display: flex; flex-wrap: wrap; gap: 10px 28px; padding-top: 8px; border-top: 1px solid var(--line); }
+.fact { display: grid; gap: 2px; padding-top: 14px; }
+.fact b { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.fact span { font-size: .86rem; color: var(--muted); }
+@media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
+
+/* Teste do agachamento */
+.lab {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
+  padding: clamp(18px, 3vw, 28px); display: grid; gap: 18px; min-width: 0;
+  box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.lab-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.lab-head h2 { font-size: 1.05rem; font-weight: 700; }
+.lab-head p { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
+.swatches-test { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.panel { display: grid; gap: 10px; min-width: 0; }
+.panel-label { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 600; font-size: .95rem; }
+.window {
+  position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 16px; overflow: hidden;
+  background-color: var(--under);
+  background-image: radial-gradient(var(--under-dot) 22%, transparent 24%);
+  background-size: 18px 18px;
+}
+.window .secret {
+  position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 12px;
+  font-family: var(--font-display); font-weight: 800; color: var(--under-ink);
+  font-size: clamp(1.1rem, 2.6vw, 1.5rem); line-height: 1.1;
+}
+.fabric {
+  --gap: 0px; --op: 1;
+  position: absolute; inset: 0; opacity: var(--op);
+  background-image:
+    linear-gradient(115deg, rgba(255,255,255,.10), rgba(255,255,255,0) 40%, rgba(255,255,255,.06) 70%, rgba(255,255,255,0)),
+    repeating-linear-gradient(90deg, var(--garment) 0 4px, transparent 4px calc(4px + var(--gap))),
+    repeating-linear-gradient(0deg, var(--garment) 0 4px, transparent 4px calc(4px + var(--gap)));
+}
+.chip {
+  font-family: var(--font-mono); font-size: .74rem; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid currentColor; white-space: nowrap;
+}
+.chip[data-state="ok"] { color: var(--ok); }
+.chip[data-state="mid"] { color: var(--mid); }
+.chip[data-state="bad"] { color: var(--bad); }
+.control { display: grid; gap: 10px; }
+.control-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.control label { font-weight: 600; font-size: .95rem; }
+.readout { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.05rem; }
+input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; margin: 0; }
+.scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); }
+.lab-foot { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.lab-foot p { font-size: .86rem; color: var(--muted); flex: 1 1 14rem; min-width: 0; }
+.lab-foot .btn { min-height: 42px; padding: 0 18px; }
+
+/* Faixa técnica */
+.specs-strip { border-block: 1px solid var(--line); background: var(--surface); }
+.specs-strip ul {
+  list-style: none; margin: 0; padding-block: 18px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px;
+  font-family: var(--font-mono); font-size: .86rem; color: var(--muted);
+}
+.specs-strip b { color: var(--ink); font-weight: 500; }
+
+/* Pilares */
+.pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); }
+.pillar { display: grid; gap: 12px; align-content: start; padding-top: 22px; border-top: 2px solid var(--ink); }
+.pillar h3 { font-size: 1.2rem; font-weight: 700; }
+.pillar p { color: var(--muted); }
+.pillar .spec { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); }
+@media (max-width: 820px) { .pillars { grid-template-columns: 1fr; } }
+
+/* Coleção */
+.collection { background: var(--surface); border-block: 1px solid var(--line); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.filter {
+  min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line);
+  background: transparent; cursor: pointer; font-weight: 500;
+}
+.filter[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: clamp(16px, 2vw, 24px); }
+.card { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.card-media {
+  position: relative; aspect-ratio: 5 / 6; max-width: 100%; border-radius: var(--radius);
+  background: color-mix(in srgb, var(--tint, var(--garment)) 16%, var(--sunk));
+  display: grid; place-items: center; overflow: hidden; transition: background-color .25s ease;
+}
+.card-media svg { width: 78%; height: 88%; }
+.badge {
+  position: absolute; top: 12px; left: 12px; z-index: 1;
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase;
+  background: var(--surface); color: var(--ink); padding: 4px 10px; border-radius: 999px;
+}
+.g { fill: var(--tint, var(--garment)); transition: fill .25s ease; }
+.shade { fill: rgba(0,0,0,.2); }
+.shine { fill: rgba(255,255,255,.12); }
+.seam { fill: none; stroke: rgba(0,0,0,.28); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.floor { fill: var(--ink); opacity: .08; }
+.card-body { display: grid; gap: 10px; padding-top: 14px; align-content: start; }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.card-head h3 { font-family: var(--font-body); font-size: 1.04rem; font-weight: 700; line-height: 1.25; letter-spacing: 0; }
+.price { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; text-align: right; }
+.price s { display: block; font-weight: 400; font-size: .82rem; color: var(--muted); }
+.card-desc { color: var(--muted); font-size: .9rem; }
+.opt-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.opt-label { font-size: .82rem; color: var(--muted); min-width: 0; }
+.swatch {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0;
+}
+.swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--ink); }
+.sizes { display: flex; gap: 6px; flex-wrap: wrap; }
+.size {
+  min-width: 40px; height: 36px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--line);
+  background: transparent; cursor: pointer; font-family: var(--font-mono); font-size: .82rem;
+}
+.size[aria-checked="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.card .btn { min-height: 44px; margin-top: 4px; }
+.card-msg { font-size: .84rem; min-height: 1.3em; color: var(--bad); }
+.card-msg.ok { color: var(--ok); }
+
+/* Guia de medidas */
+.sizing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+.sizing .section-head { margin-bottom: 0; }
+.howto { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 14px; }
+.howto li { display: grid; grid-template-columns: auto 1fr; gap: 12px; color: var(--muted); }
+.howto b { color: var(--ink); font-weight: 600; }
+.howto .n { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); padding-top: 3px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 460px; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+thead th { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+tbody th { font-family: var(--font-display); font-weight: 700; }
+tbody tr:last-child > * { border-bottom: 0; }
+@media (max-width: 860px) { .sizing { grid-template-columns: 1fr; } }
+
+/* Dúvidas */
+.faq { display: grid; gap: 0; max-width: 52rem; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 20px 0; display: flex; justify-content: space-between; gap: 16px;
+  font-weight: 600; font-size: 1.05rem;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); font-size: 1.3rem; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding-bottom: 20px; color: var(--muted); max-width: 44rem; }
+
+/* Newsletter */
+.newsletter { background: var(--ink); color: var(--bg); border-radius: 26px; padding: clamp(28px, 5vw, 56px); display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: center; }
+.newsletter h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); font-weight: 800; }
+.newsletter p { opacity: .8; margin-top: 10px; }
+.news-form { display: grid; gap: 10px; }
+.news-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.news-row input {
+  flex: 1 1 14rem; min-width: 0; min-height: 50px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--bg) 35%, transparent); background: transparent; color: var(--bg);
+}
+.news-row input::placeholder { color: color-mix(in srgb, var(--bg) 60%, transparent); }
+.news-row .btn { background: var(--bg); color: var(--ink); border-color: var(--bg); min-height: 50px; }
+.news-msg { font-size: .9rem; min-height: 1.4em; }
+@media (max-width: 820px) { .newsletter { grid-template-columns: 1fr; } }
+
+/* Rodapé */
+.footer { padding-block: 56px 40px; color: var(--muted); font-size: .92rem; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr)); gap: 28px; }
+.footer h3 { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); font-weight: 500; margin-bottom: 12px; }
+.footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.footer a { text-decoration: none; }
+.footer a:hover { color: var(--ink); }
+.footer .logo { display: inline-block; margin-bottom: 10px; color: var(--ink); }
+.footer-bottom { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: .84rem; }
+@media (max-width: 820px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
+
+/* Sacola */
+.overlay { position: fixed; inset: 0; background: rgba(10, 6, 12, .45); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+.overlay.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 50; width: min(420px, 100%);
+  background: var(--surface); border-left: 1px solid var(--line);
+  display: grid; grid-template-rows: auto auto 1fr auto;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  transform: translateX(100%); transition: transform .3s cubic-bezier(.2, .7, .2, 1);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.drawer-head h2 { font-size: 1.1rem; font-weight: 700; }
+.ship { padding: 14px 20px; display: grid; gap: 8px; font-size: .88rem; border-bottom: 1px solid var(--line); }
+.ship-bar { height: 6px; border-radius: 999px; background: var(--sunk); overflow: hidden; }
+.ship-bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+.cart-items { overflow-y: auto; padding: 8px 20px; list-style: none; margin: 0; }
+.cart-item { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.cart-thumb { width: 64px; height: 76px; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--tint) 16%, var(--sunk)); }
+.cart-thumb svg { width: 80%; height: 90%; }
+.cart-info { display: grid; gap: 2px; min-width: 0; }
+.cart-info b { font-weight: 600; font-size: .95rem; }
+.cart-info span { font-size: .82rem; color: var(--muted); }
+.qty { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+.qty button { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+.qty output { min-width: 24px; text-align: center; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.cart-line { display: grid; justify-items: end; gap: 8px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.remove { border: 0; background: none; color: var(--muted); font-size: .8rem; text-decoration: underline; cursor: pointer; padding: 0; }
+.empty { padding: 40px 0; text-align: center; color: var(--muted); display: grid; gap: 14px; justify-items: center; }
+.drawer-foot { padding: 18px 20px 22px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
+.total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.drawer-foot small { color: var(--muted); font-size: .8rem; }
+
+/* Aviso rápido */
+.toast {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 999px; font-weight: 500; font-size: .92rem;
+  transition: opacity .2s ease, transform .2s ease; max-width: calc(100% - 32px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="announce"><strong>Frete grátis</strong> acima de R$ 299 · Troca grátis em até 30 dias</div>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="logo" href="#topo" aria-label="Monvi, início">MONVI<span>.</span></a>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <a href="#colecao">Coleção</a>
+      <a href="#teste">Teste do agachamento</a>
+      <a href="#tecido">Tecido</a>
+      <a href="#medidas">Medidas</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <button class="icon-btn" id="cart-btn" type="button" aria-controls="cart" aria-label="Abrir sacola">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="cart-label">Sacola</span>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="topo">
+
+  <section class="hero" id="teste">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Moda fitness opaca e confortável</span>
+        <h1>Pode agachar. <em>Nada aparece.</em></h1>
+        <p class="hero-lead">Leggings, tops e shorts que não ficam transparentes, nem no agachamento mais fundo. E com um toque tão macio que você esquece que está de roupa de treino.</p>
+        <div class="hero-ctas">
+          <a class="btn accent" href="#colecao">Ver a coleção</a>
+          <a class="btn ghost" href="#tecido">Conhecer o tecido</a>
+        </div>
+        <div class="hero-facts">
+          <div class="fact"><b>280 g/m²</b><span>gramatura do tecido</span></div>
+          <div class="fact"><b>40%</b><span>de alongamento testado</span></div>
+          <div class="fact"><b>PP ao GG</b><span>mesma opacidade em todos</span></div>
+        </div>
+      </div>
+
+      <div class="lab" aria-labelledby="lab-title">
+        <div class="lab-head">
+          <h2 id="lab-title">Teste do agachamento</h2>
+          <p>fundo estampado · luz forte</p>
+        </div>
+        <div class="swatches-test">
+          <div class="panel" data-fabric="comum">
+            <div class="panel-label">Legging comum <span class="chip" data-state="ok">Opaca</span></div>
+            <div class="window">
+              <div class="secret" aria-hidden="true">Isso não deveria aparecer</div>
+              <div class="fabric"></div>
+            </div>
+          </div>
+          <div class="panel" data-fabric="monvi">
+            <div class="panel-label">Monvi <span class="chip" data-state="ok">Continua opaca</span></div>
+            <div class="window">
+              <div class="secret" aria-hidden="true">Isso não deveria aparecer</div>
+              <div class="fabric"></div>
+            </div>
+          </div>
+        </div>
+        <div class="control">
+          <div class="control-row">
+            <label for="stretch">Alongamento do tecido</label>
+            <output class="readout" id="stretch-out" for="stretch">32%</output>
+          </div>
+          <input type="range" id="stretch" min="0" max="40" step="1" value="32" aria-describedby="stretch-hint">
+          <div class="scale" aria-hidden="true"><span>em pé</span><span>passada</span><span>agachamento</span></div>
+        </div>
+        <div class="lab-foot">
+          <p id="stretch-hint">Arraste para esticar o tecido. Num agachamento profundo, a legging estica cerca de 40% no quadril.</p>
+          <button class="btn ghost" id="squat" type="button">Levantar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="specs-strip">
+    <ul class="wrap">
+      <li><b>78%</b> poliamida</li>
+      <li><b>22%</b> elastano</li>
+      <li><b>280 g/m²</b> trama fechada</li>
+      <li><b>FPU 50+</b> proteção solar</li>
+      <li><b>Costura</b> flatlock</li>
+      <li><b>Cós</b> alto de 12 cm</li>
+    </ul>
+  </div>
+
+  <section class="section" id="tecido">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Por que Monvi</span>
+        <h2>Feita para você treinar sem pensar na roupa.</h2>
+        <p>A gente começou a Monvi cansada de puxar a blusa para cobrir a legging. Então escolhemos um tecido mais encorpado e testamos cada modelo do jeito que ele vai ser usado.</p>
+      </div>
+      <div class="pillars">
+        <article class="pillar">
+          <span class="spec">40% de alongamento · luz direta</span>
+          <h3>Opaca de verdade</h3>
+          <p>Trama fechada de 280 g/m². Cada modelo passa pelo teste do agachamento contra fundo claro e luz forte antes de entrar na loja.</p>
+        </article>
+        <article class="pillar">
+          <span class="spec">toque de algodão · costura plana</span>
+          <h3>Macia o dia inteiro</h3>
+          <p>Costuras planas que não marcam a pele e um cós que segura firme sem apertar a barriga. Dá para ir do treino ao mercado.</p>
+        </article>
+        <article class="pillar">
+          <span class="spec">secagem rápida · não desbota</span>
+          <h3>Feita para suar</h3>
+          <p>O tecido seca rápido, não acumula cheiro e mantém a forma e a cor depois de muitas lavagens.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section collection" id="colecao">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Coleção</span>
+        <h2>Peças para treinar, correr e viver.</h2>
+        <p>Escolha a cor e o tamanho e adicione à sacola. Todas as peças usam o mesmo tecido opaco.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar por categoria" id="filters">
+        <button class="filter" type="button" data-cat="todos" aria-pressed="true">Todos</button>
+        <button class="filter" type="button" data-cat="leggings" aria-pressed="false">Leggings</button>
+        <button class="filter" type="button" data-cat="tops" aria-pressed="false">Tops</button>
+        <button class="filter" type="button" data-cat="shorts" aria-pressed="false">Shorts</button>
+        <button class="filter" type="button" data-cat="macacoes" aria-pressed="false">Macaquinhos</button>
+        <button class="filter" type="button" data-cat="conjuntos" aria-pressed="false">Conjuntos</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="medidas">
+    <div class="wrap sizing">
+      <div class="section-head">
+        <span class="eyebrow">Guia de medidas</span>
+        <h2>Ache seu tamanho em 2 minutos.</h2>
+        <p>Use uma fita métrica, sem apertar. Se ficar entre dois tamanhos, escolha o maior para mais conforto ou o menor para mais compressão.</p>
+        <ol class="howto">
+          <li><span class="n">1</span><span><b>Cintura:</b> meça na parte mais fina do tronco, um pouco acima do umbigo.</span></li>
+          <li><span class="n">2</span><span><b>Quadril:</b> meça na parte mais larga do bumbum, com os pés juntos.</span></li>
+          <li><span class="n">3</span><span><b>Compare</b> com a tabela e use a medida do quadril para leggings e shorts.</span></li>
+        </ol>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption hidden>Tabela de medidas Monvi em centímetros</caption>
+          <thead>
+            <tr><th scope="col">Tamanho</th><th scope="col">Cintura (cm)</th><th scope="col">Quadril (cm)</th><th scope="col">Equivale a</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">PP</th><td>60–64</td><td>86–90</td><td>34–36</td></tr>
+            <tr><th scope="row">P</th><td>64–68</td><td>90–95</td><td>36–38</td></tr>
+            <tr><th scope="row">M</th><td>68–74</td><td>95–101</td><td>40–42</td></tr>
+            <tr><th scope="row">G</th><td>74–81</td><td>101–108</td><td>44–46</td></tr>
+            <tr><th scope="row">GG</th><td>81–89</td><td>108–116</td><td>48–50</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="duvidas" style="padding-top: 0">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Dúvidas</span>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>As leggings ficam transparentes no agachamento?</summary>
+          <p>Não. O tecido tem 280 g/m² e trama fechada. Testamos cada modelo esticado a 40%, contra fundo claro e luz forte, em todos os tamanhos.</p>
+        </details>
+        <details>
+          <summary>O tecido esquenta ou dá coceira?</summary>
+          <p>Não. Ele é respirável, tem toque de algodão e as costuras são planas, então não marcam nem irritam a pele.</p>
+        </details>
+        <details>
+          <summary>Como devo lavar?</summary>
+          <p>Lave do avesso com água fria, sem amaciante e sem alvejante. Seque à sombra. Assim a peça mantém a cor e a elasticidade por muito mais tempo.</p>
+        </details>
+        <details>
+          <summary>Posso trocar se não servir?</summary>
+          <p>Pode. A primeira troca é grátis em até 30 dias após o recebimento, desde que a peça esteja sem uso e com a etiqueta.</p>
+        </details>
+        <details>
+          <summary>Como finalizo a compra?</summary>
+          <p>Monte sua sacola e toque em “Finalizar pelo WhatsApp”. A gente recebe o pedido com as cores e tamanhos e combina com você o pagamento e a entrega.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0">
+    <div class="wrap">
+      <div class="newsletter">
+        <div>
+          <h2>Entre para a lista da Monvi.</h2>
+          <p>Lançamentos, reposição de cores e ofertas antes de todo mundo.</p>
+        </div>
+        <form class="news-form" id="news-form" novalidate>
+          <label class="opt-label" for="news-email" style="color: inherit; opacity: .8">Seu e-mail</label>
+          <div class="news-row">
+            <input id="news-email" name="email" type="email" placeholder="voce@email.com" autocomplete="email" required>
+            <button class="btn" type="submit">Quero receber</button>
+          </div>
+          <p class="news-msg" id="news-msg" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="#topo">MONVI<span>.</span></a>
+        <p>Roupas fitness que não ficam transparentes e são confortáveis do aquecimento ao alongamento.</p>
+      </div>
+      <div>
+        <h3>Loja</h3>
+        <ul>
+          <li><a href="#colecao">Leggings</a></li>
+          <li><a href="#colecao">Tops</a></li>
+          <li><a href="#colecao">Shorts</a></li>
+          <li><a href="#colecao">Conjuntos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Ajuda</h3>
+        <ul>
+          <li><a href="#medidas">Guia de medidas</a></li>
+          <li><a href="#duvidas">Trocas e devoluções</a></li>
+          <li><a href="#duvidas">Cuidados com a peça</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contato</h3>
+        <ul>
+          <!-- Troque pelos links reais da loja -->
+          <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a id="footer-whatsapp" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li>Seg a sex, 9h às 18h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Monvi. Todos os direitos reservados.</span>
+      <span>Feito para treinar sem medo.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="cart" aria-label="Sacola" aria-hidden="true" inert>
+  <div class="drawer-head">
+    <h2>Sua sacola</h2>
+    <button class="icon-btn" id="cart-close" type="button" aria-label="Fechar sacola">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="ship">
+    <span id="ship-text">Faltam R$ 299,00 para o frete grátis</span>
+    <div class="ship-bar"><i id="ship-bar"></i></div>
+  </div>
+  <ul class="cart-items" id="cart-items"></ul>
+  <div class="drawer-foot" id="cart-foot">
+    <div class="total"><span>Subtotal</span><span id="cart-total">R$ 0,00</span></div>
+    <a class="btn accent block" id="checkout" href="#" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
+    <small>Você confirma pagamento e entrega direto com a gente no WhatsApp.</small>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  // ===== Configurações da loja: edite aqui =====
+  const CONFIG = {
+    whatsapp: "5500000000000", // DDI + DDD + número, só dígitos (ex.: 5511999998888)
+    freteGratisAcima: 299,
+  };
+
+  const CORES = {
+    preto:    { nome: "Preto Noite",   hex: "#1F1C22" },
+    ameixa:   { nome: "Ameixa",        hex: "#5B2A4A" },
+    musgo:    { nome: "Musgo",         hex: "#4B5A3D" },
+    petroleo: { nome: "Azul Petróleo", hex: "#1F4E5A" },
+    argila:   { nome: "Rosa Argila",   hex: "#C4877E" },
+    areia:    { nome: "Areia",         hex: "#B9A283" },
+    berry:    { nome: "Berry",         hex: "#A3305A" },
+  };
+
+  const PRODUTOS = [
+    { id: "legging-essencial", nome: "Legging Essencial",        cat: "leggings",  preco: 189.9, forma: "legging",    cores: ["preto", "ameixa", "musgo"],    selo: "Mais vendida", desc: "Cós alto de 12 cm que não enrola." },
+    { id: "legging-sculpt",    nome: "Legging Sculpt Cós Duplo", cat: "leggings",  preco: 219.9, forma: "legging",    cores: ["petroleo", "preto", "berry"],  desc: "Cós duplo com leve compressão na barriga." },
+    { id: "top-flow",          nome: "Top Flow Apoio Médio",     cat: "tops",      preco: 129.9, forma: "top",        cores: ["berry", "preto", "areia"],     selo: "Novo", desc: "Bojo removível e alça larga." },
+    { id: "top-cruzado",       nome: "Top Costas Cruzadas",      cat: "tops",      preco: 119.9, forma: "top",        cores: ["argila", "musgo", "preto"],    desc: "Apoio leve para yoga e pilates." },
+    { id: "short-biker-18",    nome: "Short Biker 18 cm",        cat: "shorts",    preco: 139.9, forma: "short",      cores: ["preto", "ameixa", "petroleo"], desc: "Não sobe na passada." },
+    { id: "short-biker-12",    nome: "Short Biker 12 cm",        cat: "shorts",    preco: 129.9, forma: "short",      cores: ["musgo", "argila", "preto"],    desc: "Mais curto, com o mesmo tecido opaco." },
+    { id: "macaquinho",        nome: "Macaquinho Monvi",         cat: "macacoes",  preco: 259.9, forma: "macaquinho", cores: ["ameixa", "preto", "petroleo"], selo: "Novo", desc: "Peça única com alça regulável." },
+    { id: "conjunto-essencial",nome: "Conjunto Essencial",       cat: "conjuntos", preco: 289.9, precoDe: 319.8, forma: "conjunto", cores: ["preto", "musgo", "berry"], desc: "Legging Essencial + Top Flow." },
+  ];
+
+  const TAMANHOS = ["PP", "P", "M", "G", "GG"];
+  const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+  const storage = {
+    get(key, fallback) {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* armazenamento indisponível */ }
+    },
+  };
+
+  // ===== Desenhos das peças (SVG) =====
+  const LEGGING = `
+    <path class="g" d="M60 30H140L146 62L133 226H108L100 96L92 226H67L54 62Z"/>
+    <rect class="shade" x="60" y="30" width="80" height="17" rx="3"/>
+    <path class="shine" d="M64 52L74 52L78 222H70Z"/>
+    <path class="seam" d="M100 47V96"/>`;
+  const TOP = `
+    <path class="g" d="M70 40H84L100 72L116 40H130L138 112Q100 124 62 112Z"/>
+    <path class="shade" d="M62 100Q100 112 138 100L139 118Q100 131 61 118Z"/>
+    <path class="shine" d="M72 46H80L74 104H67Z"/>`;
+  const SHORT = `
+    <path class="g" d="M62 62H138L146 92L150 168H106L100 120L94 168H50L54 92Z"/>
+    <rect class="shade" x="62" y="62" width="76" height="16" rx="3"/>
+    <path class="shine" d="M58 94H66L62 164H54Z"/>
+    <path class="seam" d="M100 78V120"/>`;
+  const MACAQUINHO = `
+    <path class="g" d="M78 22H88L94 62H106L112 22H122L130 72L136 122L146 184H106L100 152L94 184H54L64 122L70 72Z"/>
+    <path class="shade" d="M66 112H134L136 124H64Z"/>
+    <path class="shine" d="M72 74H80L72 180H62Z"/>
+    <path class="seam" d="M100 124V152"/>`;
+  const FORMAS = {
+    legging: LEGGING,
+    top: TOP,
+    short: SHORT,
+    macaquinho: MACAQUINHO,
+    conjunto: `<g transform="translate(46 -8) scale(.54)">${TOP}</g><g transform="translate(46 76) scale(.6)">${LEGGING}</g>`,
+  };
+  const svgPeca = (forma) =>
+    `<svg viewBox="0 0 200 240" aria-hidden="true" focusable="false"><ellipse class="floor" cx="100" cy="232" rx="58" ry="5"/>${FORMAS[forma]}</svg>`;
+
+  // ===== Teste do agachamento =====
+  const range = $("#stretch");
+  const readout = $("#stretch-out");
+  const squatBtn = $("#squat");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function atualizarTeste() {
+    const s = Number(range.value);
+    const t = s / 40;
+    readout.textContent = s + "%";
+    $$(".panel[data-fabric]").forEach((panel) => {
+      const comum = panel.dataset.fabric === "comum";
+      const fabric = $(".fabric", panel);
+      fabric.style.setProperty("--gap", (comum ? t * 8 : 0).toFixed(2) + "px");
+      fabric.style.setProperty("--op", (comum ? 1 - t * 0.3 : 1).toFixed(2));
+      const chip = $(".chip", panel);
+      let estado = ["Continua opaca", "ok"];
+      if (comum) {
+        if (s < 12) estado = ["Opaca", "ok"];
+        else if (s < 26) estado = ["Começa a marcar", "mid"];
+        else estado = ["Ficou transparente", "bad"];
+      }
+      chip.textContent = estado[0];
+      chip.dataset.state = estado[1];
+    });
+    squatBtn.textContent = s >= 20 ? "Levantar" : "Agachar";
+  }
+
+  let anim = 0;
+  function animarPara(alvo) {
+    cancelAnimationFrame(anim);
+    if (reduceMotion.matches) { range.value = alvo; atualizarTeste(); return; }
+    const inicio = Number(range.value);
+    const t0 = performance.now();
+    const dur = 900 + Math.abs(alvo - inicio) * 25;
+    const passo = (agora) => {
+      const p = Math.min(1, (agora - t0) / dur);
+      const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      range.value = Math.round(inicio + (alvo - inicio) * e);
+      atualizarTeste();
+      if (p < 1) anim = requestAnimationFrame(passo);
+    };
+    anim = requestAnimationFrame(passo);
+  }
+
+  range.addEventListener("input", () => { cancelAnimationFrame(anim); atualizarTeste(); });
+  squatBtn.addEventListener("click", () => animarPara(Number(range.value) >= 20 ? 0 : 40));
+  atualizarTeste();
+
+  // ===== Vitrine =====
+  const grid = $("#grid");
+  const escolha = {}; // id -> { cor, tam }
+  PRODUTOS.forEach((p) => { escolha[p.id] = { cor: p.cores[0], tam: null }; });
+  let filtro = "todos";
+
+  function cardHTML(p) {
+    const e = escolha[p.id];
+    const cor = CORES[e.cor];
+    return `
+      <article class="card" data-id="${p.id}">
+        <div class="card-media" style="--tint:${cor.hex}">
+          ${p.selo ? `<span class="badge">${p.selo}</span>` : ""}
+          ${svgPeca(p.forma)}
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <h3>${p.nome}</h3>
+            <p class="price">${brl.format(p.preco)}${p.precoDe ? `<s>${brl.format(p.precoDe)}</s>` : ""}</p>
+          </div>
+          <p class="card-desc">${p.desc}</p>
+          <div class="opt-row">
+            <div class="opt-row" role="radiogroup" aria-label="Cor de ${p.nome}">
+              ${p.cores.map((c) => `<button type="button" class="swatch" role="radio" data-cor="${c}" aria-checked="${c === e.cor}" aria-label="${CORES[c].nome}" title="${CORES[c].nome}" style="background:${CORES[c].hex}"></button>`).join("")}
+            </div>
+            <span class="opt-label color-name">${cor.nome}</span>
+          </div>
+          <div class="sizes" role="radiogroup" aria-label="Tamanho de ${p.nome}">
+            ${TAMANHOS.map((t) => `<button type="button" class="size" role="radio" data-tam="${t}" aria-checked="${t === e.tam}">${t}</button>`).join("")}
+          </div>
+          <button type="button" class="btn add">Adicionar à sacola</button>
+          <p class="card-msg" aria-live="polite"></p>
+        </div>
+      </article>`;
+  }
+
+  function renderGrid() {
+    grid.innerHTML = PRODUTOS.filter((p) => filtro === "todos" || p.cat === filtro).map(cardHTML).join("");
+  }
+
+  $("#filters").addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".filter");
+    if (!btn) return;
+    filtro = btn.dataset.cat;
+    $$(".filter").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    renderGrid();
+  });
+
+  grid.addEventListener("click", (ev) => {
+    const card = ev.target.closest(".card");
+    if (!card) return;
+    const id = card.dataset.id;
+    const p = PRODUTOS.find((x) => x.id === id);
+    const e = escolha[id];
+    const msg = $(".card-msg", card);
+
+    const sw = ev.target.closest(".swatch");
+    if (sw) {
+      e.cor = sw.dataset.cor;
+      $$(".swatch", card).forEach((b) => b.setAttribute("aria-checked", String(b === sw)));
+      $(".card-media", card).style.setProperty("--tint", CORES[e.cor].hex);
+      $(".color-name", card).textContent = CORES[e.cor].nome;
+      return;
+    }
+    const sz = ev.target.closest(".size");
+    if (sz) {
+      e.tam = sz.dataset.tam;
+      $$(".size", card).forEach((b) => b.setAttribute("aria-checked", String(b === sz)));
+      msg.textContent = "";
+      return;
+    }
+    if (ev.target.closest(".add")) {
+      if (!e.tam) {
+        msg.className = "card-msg";
+        msg.textContent = "Escolha um tamanho para adicionar.";
+        return;
+      }
+      adicionar(p, e.cor, e.tam);
+      msg.className = "card-msg ok";
+      msg.textContent = `Adicionado: ${CORES[e.cor].nome}, ${e.tam}.`;
+    }
+  });
+
+  // ===== Sacola =====
+  let sacola = storage.get("monvi-sacola", []).filter((i) => PRODUTOS.some((p) => p.id === i.id) && CORES[i.cor]);
+  const drawer = $("#cart");
+  const overlay = $("#overlay");
+  const toast = $("#toast");
+  let toastTimer = 0;
+
+  function avisar(texto) {
+    toast.textContent = texto;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+  }
+
+  function adicionar(p, cor, tam) {
+    const chave = `${p.id}|${cor}|${tam}`;
+    const item = sacola.find((i) => i.chave === chave);
+    if (item) item.qtd += 1;
+    else sacola.push({ chave, id: p.id, cor, tam, qtd: 1 });
+    salvar();
+    avisar(`${p.nome} na sacola`);
+  }
+
+  function salvar() {
+    storage.set("monvi-sacola", sacola);
+    renderSacola();
+  }
+
+  function renderSacola() {
+    const lista = $("#cart-items");
+    const qtdTotal = sacola.reduce((n, i) => n + i.qtd, 0);
+    const subtotal = sacola.reduce((n, i) => n + i.qtd * PRODUTOS.find((p) => p.id === i.id).preco, 0);
+    $("#cart-count").textContent = qtdTotal;
+    $("#cart-total").textContent = brl.format(subtotal);
+    $("#cart-foot").hidden = sacola.length === 0;
+
+    const falta = Math.max(0, CONFIG.freteGratisAcima - subtotal);
+    $("#ship-text").textContent = falta > 0
+      ? `Faltam ${brl.format(falta)} para o frete grátis`
+      : "Você ganhou frete grátis";
+    $("#ship-bar").style.width = Math.min(100, (subtotal / CONFIG.freteGratisAcima) * 100) + "%";
+
+    if (!sacola.length) {
+      lista.innerHTML = `<li class="empty"><span>Sua sacola está vazia.</span><a class="btn ghost" href="#colecao" data-close>Ver a coleção</a></li>`;
+      return;
+    }
+    lista.innerHTML = sacola.map((i) => {
+      const p = PRODUTOS.find((x) => x.id === i.id);
+      return `
+        <li class="cart-item" data-chave="${i.chave}">
+          <div class="cart-thumb" style="--tint:${CORES[i.cor].hex}">${svgPeca(p.forma)}</div>
+          <div class="cart-info">
+            <b>${p.nome}</b>
+            <span>${CORES[i.cor].nome} · ${i.tam}</span>
+            <div class="qty">
+              <button type="button" data-q="-1" aria-label="Diminuir quantidade">−</button>
+              <output aria-label="Quantidade">${i.qtd}</output>
+              <button type="button" data-q="1" aria-label="Aumentar quantidade">+</button>
+            </div>
+          </div>
+          <div class="cart-line">
+            <span>${brl.format(p.preco * i.qtd)}</span>
+            <button type="button" class="remove">Remover</button>
+          </div>
+        </li>`;
+    }).join("");
+
+    const linhas = sacola.map((i) => {
+      const p = PRODUTOS.find((x) => x.id === i.id);
+      return `• ${i.qtd}x ${p.nome} (${CORES[i.cor].nome}, ${i.tam}): ${brl.format(p.preco * i.qtd)}`;
+    });
+    const texto = `Olá, Monvi! Quero fazer este pedido:\n\n${linhas.join("\n")}\n\nSubtotal: ${brl.format(subtotal)}`;
+    $("#checkout").href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
+  }
+
+  $("#cart-items").addEventListener("click", (ev) => {
+    if (ev.target.closest("[data-close]")) { fecharSacola(); return; }
+    const li = ev.target.closest(".cart-item");
+    if (!li) return;
+    const item = sacola.find((i) => i.chave === li.dataset.chave);
+    const q = ev.target.closest("[data-q]");
+    if (q) {
+      item.qtd += Number(q.dataset.q);
+      if (item.qtd < 1) sacola = sacola.filter((i) => i !== item);
+      salvar();
+    } else if (ev.target.closest(".remove")) {
+      sacola = sacola.filter((i) => i !== item);
+      salvar();
+    }
+  });
+
+  let ultimoFoco = null;
+  function abrirSacola() {
+    ultimoFoco = document.activeElement;
+    drawer.classList.add("open");
+    overlay.classList.add("open");
+    drawer.removeAttribute("inert");
+    drawer.setAttribute("aria-hidden", "false");
+    $("#cart-close").focus();
+  }
+  function fecharSacola() {
+    drawer.classList.remove("open");
+    overlay.classList.remove("open");
+    drawer.setAttribute("inert", "");
+    drawer.setAttribute("aria-hidden", "true");
+    if (ultimoFoco) ultimoFoco.focus();
+  }
+  $("#cart-btn").addEventListener("click", abrirSacola);
+  $("#cart-close").addEventListener("click", fecharSacola);
+  overlay.addEventListener("click", fecharSacola);
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && drawer.classList.contains("open")) fecharSacola();
+  });
+
+  // ===== Menu no celular =====
+  const nav = $("#nav");
+  const menuBtn = $("#menu-btn");
+  menuBtn.addEventListener("click", () => {
+    const aberto = nav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(aberto));
+  });
+  nav.addEventListener("click", (ev) => {
+    if (ev.target.closest("a")) { nav.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); }
+  });
+
+  // ===== Newsletter =====
+  // Para guardar os e-mails de verdade, conecte este formulário a um serviço de e-mail marketing.
+  $("#news-form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const input = $("#news-email");
+    const out = $("#news-msg");
+    const email = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      out.textContent = "Digite um e-mail válido, como voce@email.com.";
+      input.focus();
+      return;
+    }
+    out.textContent = `Pronto! As novidades vão chegar em ${email}.`;
+    input.value = "";
+  });
+
+  $("#footer-whatsapp").href = `https://wa.me/${CONFIG.whatsapp}`;
+  $("#year").textContent = new Date().getFullYear();
+
+  renderGrid();
+  renderSacola();
+})();
+</script>
+</body>
+</html>
